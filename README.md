@@ -31,8 +31,7 @@ Tips
 
 Problemen?
 - Als `npm start` faalt, controleer Node.js versie en gebruik `npm install` opnieuw.
-- Laat me weten als je wilt dat ik auto-load van `data/toernooi_data.json` bij paginalaad toevoeg.
-- Deze release: de app laadt automatisch opgeslagen toernooi-data bij paginalaad (server -> fallback localStorage), en de `RESET TOERNOOI` knop reset nu programatisch zonder pagina-herlaad.
+-  de app laadt automatisch opgeslagen toernooi-data bij paginalaad (server -> fallback localStorage), en de `RESET TOERNOOI` knop reset nu programatisch zonder pagina-herlaad.
 
 Wijzigingen sinds vorige versie
 - Auto-load: de pagina probeert `/data/toernooi_data.json` te laden en valt terug op `localStorage` als de server niet bereikbaar is.
