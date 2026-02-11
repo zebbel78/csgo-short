@@ -1,0 +1,51 @@
+:root { --cs-orange: #ff9d00; --cs-blue: #0c192c; --cs-dark: #1b1e21; --text: #e0e0e0; }
+body { font-family: 'Arial', sans-serif; background: var(--cs-blue); color: var(--text); padding: 20px; }
+.container { max-width: 900px; margin: auto; background: var(--cs-dark); padding: 25px; border-radius: 12px; border-top: 6px solid var(--cs-orange); box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
+h1, h2 { text-align: center; color: var(--cs-orange); letter-spacing: 2px; }
+table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+th { background: #25282c; padding: 12px; border-bottom: 2px solid var(--cs-orange); }
+td { padding: 10px; border-bottom: 1px solid #333; }
+input { background: #2c3136; border: 1px solid #444; color: white; padding: 8px; border-radius: 4px; width: 80%; }
+.btn { width: 100%; padding: 15px; background: var(--cs-orange); border: none; font-weight: bold; cursor: pointer; border-radius: 6px; font-size: 1.1em; }
+.btn:hover { background: #fff; }
+.btn-add { background: #4caf50; color: white; margin-bottom: 10px; width: auto; padding: 10px 20px; }
+        
+.bracket-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px; }
+.match-box { background: #25282c; padding: 15px; margin-bottom: 20px; border-left: 4px solid var(--cs-orange); position: relative; }
+.match-label { font-size: 0.7em; color: var(--cs-orange); font-weight: bold; text-transform: uppercase; }
+.final-box { grid-column: 1 / span 2; border: 2px solid var(--cs-orange); background: #2a2510; text-align: center; }
+.final-box .team-name { font-size: 2.2em; font-weight: 800; }
+.final-box .vs { font-size: 4em; }
+.rank-tag { font-size: 0.8em; opacity: 0.7; font-style: italic; }
+.hidden { display: none; }
+@font-face {
+    font-family: 'Martyric';
+    src: url('fonts/Martyric.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+.team-names { text-align:center; margin-bottom:6px; }
+.team-name { font-size:1.25em; font-weight:700; display:inline-block; margin:0 6px; }
+.vs { text-align:center; font-size:2.2em; color: var(--cs-orange); font-weight:900; margin:8px 0; font-family: 'Martyric', 'Streefight', Impact, 'Arial Black', sans-serif; }
+.scores-row { display:inline-flex; justify-content:center; align-items:center; gap:6px; margin-top:8px; }
+.team-score-input { font-size: 1.2em; width: 40px; padding: 4px 6px; text-align:center; }
+.score-btn { display:inline-block; width:40px; height:40px; line-height:36px; border-radius:6px; border:none; background:var(--cs-orange); color:#111; font-weight:700; font-size:1.2em; cursor:pointer; margin:0; }
+.score-btn:active { transform:translateY(1px); }
+
+.final-score-input { font-size: 1.0em; width: 40px; max-width:40px; padding: 4px 6px; text-align:center; }
+.final-box .score-btn { width:44px; height:44px; line-height:40px; font-size:1.15em; margin:0; }
+
+/* Semifinal (match-box) controls — make them roughly half the default size */
+.match-box .team-score-input { font-size: 0.9em; width: 36px; padding: 3px 6px; }
+.match-box .score-btn { width:20px; height:20px; line-height:18px; font-size:0.9em; margin:0; border-radius:4px; }
+
+/* Center the semifinal (halve finale) score rows inside each match box */
+.match-box .scores-row { display:flex; justify-content:center; align-items:center; width:100%; }
+.winner-text { color: var(--cs-orange); text-shadow: 0 0 8px var(--cs-orange); }
+.loser-text { opacity: 0.45; color: #999; }
+.flash { animation: flash-text 0.9s ease-in-out infinite alternate; }
+@keyframes flash-text {
+    from { text-shadow: none; transform: none; }
+    to { text-shadow: 0 0 14px var(--cs-orange); transform: scale(1.02); }
+}
