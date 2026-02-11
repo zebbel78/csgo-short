@@ -29,15 +29,15 @@ function updateFinalIfReady() {
             <div class="team-names">
                 <span id="final-right" class="team-name final-team" data-code="${rightTeam.code}">${rightTeam.p1.name} &nbsp;&amp;&nbsp; ${rightTeam.p2.name}</span>
             </div>
-                <div class="scores-row">
-                    <button class="score-btn" onclick="changeFinalScore('${leftTeam.code}','${rightTeam.code}',-1)">−</button>
-                    <input id="final-score-${leftTeam.code}" class="final-score-input" type="number" min="0" max="9" inputmode="numeric" pattern="[0-9]*" value="0">
-                    <button class="score-btn" onclick="changeFinalScore('${leftTeam.code}','${rightTeam.code}',1)">+</button>
+                        <div class="scores-row">
+                            <button class="score-btn" data-action="final-change" data-code="${leftTeam.code}" data-other="${rightTeam.code}" data-delta="-1">−</button>
+                            <input id="final-score-${leftTeam.code}" class="final-score-input" type="number" min="0" max="9" inputmode="numeric" pattern="[0-9]*" value="0">
+                            <button class="score-btn" data-action="final-change" data-code="${leftTeam.code}" data-other="${rightTeam.code}" data-delta="1">+</button>
 
-                    <button class="score-btn" onclick="changeFinalScore('${rightTeam.code}','${leftTeam.code}',-1)">−</button>
-                    <input id="final-score-${rightTeam.code}" class="final-score-input" type="number" min="0" max="9" inputmode="numeric" pattern="[0-9]*" value="0">
-                    <button class="score-btn" onclick="changeFinalScore('${rightTeam.code}','${leftTeam.code}',1)">+</button>
-                </div>
+                            <button class="score-btn" data-action="final-change" data-code="${rightTeam.code}" data-other="${leftTeam.code}" data-delta="-1">−</button>
+                            <input id="final-score-${rightTeam.code}" class="final-score-input" type="number" min="0" max="9" inputmode="numeric" pattern="[0-9]*" value="0">
+                            <button class="score-btn" data-action="final-change" data-code="${rightTeam.code}" data-other="${leftTeam.code}" data-delta="1">+</button>
+                        </div>
         `;
 
         setupFinalAutoConfirm(leftTeam.code, rightTeam.code);
@@ -83,13 +83,21 @@ function autoSave() {
 }
 
 function attachInputListeners() {
-    const names = document.querySelectorAll('.p-name');
-    const m1s = document.querySelectorAll('.p-m1');
-    const m2s = document.querySelectorAll('.p-m2');
-    const handler = () => { autoSave(); try { populatePlayerScoreboard(getPlayersFromInputs()); } catch(e){} };
-    names.forEach(n => { n.removeEventListener('input', handler); n.addEventListener('input', handler); });
-    m1s.forEach(i => { i.removeEventListener('input', handler); i.addEventListener('input', handler); });
-    m2s.forEach(i => { i.removeEventListener('input', handler); i.addEventListener('input', handler); });
+    // Use event delegation on the player-rows container to avoid adding
+    // many duplicate listeners and to ensure dynamically added rows are handled.
+    if (window._playerRowsListenerAttached) return;
+    const container = document.getElementById('player-rows');
+    if (!container) return;
+    const handler = (ev) => {
+        const target = ev.target;
+        if (!target) return;
+        if (target.classList && (target.classList.contains('p-name') || target.classList.contains('p-m1') || target.classList.contains('p-m2'))) {
+            try { populatePlayerScoreboard(getPlayersFromInputs()); } catch (e) {}
+            try { autoSave(); } catch (e) {}
+        }
+    };
+    container.addEventListener('input', handler);
+    window._playerRowsListenerAttached = true;
 }
 
 function setupAutoConfirmForSemi(codeA, codeB, semiIndex) {
@@ -167,9 +175,8 @@ function removeFinalFlash() {
     if(rightEl) { rightEl.classList.remove('flash'); rightEl.classList.remove('winner-text','loser-text'); }
 }
 
-function runConfetti() {
-    const persistent = arguments.length ? !!arguments[0] : false;
-    if(persistent && window._confettiRunning) return;
+function runConfetti(persistent = false) {
+    if (persistent && window._confettiRunning) return;
     const canvas = persistent && window._confettiCanvas ? window._confettiCanvas : document.createElement('canvas');
     if(persistent) { window._confettiCanvas = canvas; window._confettiRunning = true; }
     canvas.style.position = 'fixed'; canvas.style.left = 0; canvas.style.top = 0; canvas.style.pointerEvents = 'none';
@@ -298,13 +305,13 @@ function startKnockout() {
             <span id="semi1-right" class="team-name">${teams[3].p1.name} &nbsp;&amp;&nbsp; ${teams[3].p2.name}</span>
         </div>
         <div class="scores-row">
-            <button class="score-btn" onclick="changeSemiScore('${teams[0].code}','${teams[3].code}',-1,1)">−</button>
+            <button class="score-btn" data-action="semi-change" data-code="${teams[0].code}" data-other="${teams[3].code}" data-delta="-1" data-semi="1">−</button>
             <input id="score-${teams[0].code}" class="team-score-input" type="number" min="0" max="9" value="0">
-            <button class="score-btn" onclick="changeSemiScore('${teams[0].code}','${teams[3].code}',1,1)">+</button>
+            <button class="score-btn" data-action="semi-change" data-code="${teams[0].code}" data-other="${teams[3].code}" data-delta="1" data-semi="1">+</button>
 
-            <button class="score-btn" onclick="changeSemiScore('${teams[3].code}','${teams[0].code}',-1,1)">−</button>
+            <button class="score-btn" data-action="semi-change" data-code="${teams[3].code}" data-other="${teams[0].code}" data-delta="-1" data-semi="1">−</button>
             <input id="score-${teams[3].code}" class="team-score-input" type="number" min="0" max="9" value="0">
-            <button class="score-btn" onclick="changeSemiScore('${teams[3].code}','${teams[0].code}',1,1)">+</button>
+            <button class="score-btn" data-action="semi-change" data-code="${teams[3].code}" data-other="${teams[0].code}" data-delta="1" data-semi="1">+</button>
         </div>
     `;
     document.getElementById('m2-content').innerHTML = `
@@ -316,13 +323,13 @@ function startKnockout() {
             <span id="semi2-right" class="team-name">${teams[2].p1.name} &nbsp;&amp;&nbsp; ${teams[2].p2.name}</span>
         </div>
         <div class="scores-row">
-            <button class="score-btn" onclick="changeSemiScore('${teams[1].code}','${teams[2].code}',-1,2)">−</button>
+            <button class="score-btn" data-action="semi-change" data-code="${teams[1].code}" data-other="${teams[2].code}" data-delta="-1" data-semi="2">−</button>
             <input id="score-${teams[1].code}" class="team-score-input" type="number" min="0" max="9" value="0">
-            <button class="score-btn" onclick="changeSemiScore('${teams[1].code}','${teams[2].code}',1,2)">+</button>
+            <button class="score-btn" data-action="semi-change" data-code="${teams[1].code}" data-other="${teams[2].code}" data-delta="1" data-semi="2">+</button>
 
-            <button class="score-btn" onclick="changeSemiScore('${teams[2].code}','${teams[1].code}',-1,2)">−</button>
+            <button class="score-btn" data-action="semi-change" data-code="${teams[2].code}" data-other="${teams[1].code}" data-delta="-1" data-semi="2">−</button>
             <input id="score-${teams[2].code}" class="team-score-input" type="number" min="0" max="9" value="0">
-            <button class="score-btn" onclick="changeSemiScore('${teams[2].code}','${teams[1].code}',1,2)">+</button>
+            <button class="score-btn" data-action="semi-change" data-code="${teams[2].code}" data-other="${teams[1].code}" data-delta="1" data-semi="2">+</button>
         </div>
     `;
     window.semiResults = { 1: null, 2: null };
@@ -333,3 +340,172 @@ function startKnockout() {
     document.getElementById('setup').classList.add('hidden');
     document.getElementById('bracket-view').classList.remove('hidden');
 }
+
+function renderBracketFromTeams(teams, semiResults) {
+    if(!teams || teams.length < 4) return;
+    window.currentTeams = teams;
+    // render same layout as startKnockout but using provided teams
+    document.getElementById('m1-content').innerHTML = `
+        <div class="team-names">
+            <span id="semi1-left" class="team-name">${teams[0].p1.name} &nbsp;&amp;&nbsp; ${teams[0].p2.name}</span>
+        </div>
+        <div class="vs">VS</div>
+        <div class="team-names">
+            <span id="semi1-right" class="team-name">${teams[3].p1.name} &nbsp;&amp;&nbsp; ${teams[3].p2.name}</span>
+        </div>
+        <div class="scores-row">
+            <button class="score-btn" data-action="semi-change" data-code="${teams[0].code}" data-other="${teams[3].code}" data-delta="-1" data-semi="1">−</button>
+            <input id="score-${teams[0].code}" class="team-score-input" type="number" min="0" max="9" value="0">
+            <button class="score-btn" data-action="semi-change" data-code="${teams[0].code}" data-other="${teams[3].code}" data-delta="1" data-semi="1">+</button>
+
+            <button class="score-btn" data-action="semi-change" data-code="${teams[3].code}" data-other="${teams[0].code}" data-delta="-1" data-semi="1">−</button>
+            <input id="score-${teams[3].code}" class="team-score-input" type="number" min="0" max="9" value="0">
+            <button class="score-btn" data-action="semi-change" data-code="${teams[3].code}" data-other="${teams[0].code}" data-delta="1" data-semi="1">+</button>
+        </div>
+    `;
+
+    document.getElementById('m2-content').innerHTML = `
+        <div class="team-names">
+            <span id="semi2-left" class="team-name">${teams[1].p1.name} &nbsp;&amp;&nbsp; ${teams[1].p2.name}</span>
+        </div>
+        <div class="vs">VS</div>
+        <div class="team-names">
+            <span id="semi2-right" class="team-name">${teams[2].p1.name} &nbsp;&amp;&nbsp; ${teams[2].p2.name}</span>
+        </div>
+        <div class="scores-row">
+            <button class="score-btn" data-action="semi-change" data-code="${teams[1].code}" data-other="${teams[2].code}" data-delta="-1" data-semi="2">−</button>
+            <input id="score-${teams[1].code}" class="team-score-input" type="number" min="0" max="9" value="0">
+            <button class="score-btn" data-action="semi-change" data-code="${teams[1].code}" data-other="${teams[2].code}" data-delta="1" data-semi="2">+</button>
+
+            <button class="score-btn" data-action="semi-change" data-code="${teams[2].code}" data-other="${teams[1].code}" data-delta="-1" data-semi="2">−</button>
+            <input id="score-${teams[2].code}" class="team-score-input" type="number" min="0" max="9" value="0">
+            <button class="score-btn" data-action="semi-change" data-code="${teams[2].code}" data-other="${teams[1].code}" data-delta="1" data-semi="2">+</button>
+        </div>
+    `;
+
+    window.semiResults = semiResults || {1: null, 2: null};
+    setupAutoConfirmForSemi(teams[0].code, teams[3].code, 1);
+    setupAutoConfirmForSemi(teams[1].code, teams[2].code, 2);
+
+    // apply any existing semi-result highlights
+    try {
+        if(window.semiResults && window.semiResults[1]) {
+            const winnerCode = window.semiResults[1].code;
+            const left = document.getElementById('semi1-left');
+            const right = document.getElementById('semi1-right');
+            if(left && right) {
+                if(winnerCode === teams[0].code) { left.classList.add('winner-text'); right.classList.add('loser-text'); }
+                else if(winnerCode === teams[3].code) { right.classList.add('winner-text'); left.classList.add('loser-text'); }
+            }
+        }
+        if(window.semiResults && window.semiResults[2]) {
+            const winnerCode = window.semiResults[2].code;
+            const left = document.getElementById('semi2-left');
+            const right = document.getElementById('semi2-right');
+            if(left && right) {
+                if(winnerCode === teams[1].code) { left.classList.add('winner-text'); right.classList.add('loser-text'); }
+                else if(winnerCode === teams[2].code) { right.classList.add('winner-text'); left.classList.add('loser-text'); }
+            }
+        }
+    } catch(e) {}
+
+    updateFinalIfReady();
+    autoSave();
+    populatePlayerScoreboard(window.currentPlayers || []);
+    document.getElementById('setup').classList.add('hidden');
+    document.getElementById('bracket-view').classList.remove('hidden');
+}
+
+async function loadSavedData() {
+    let data = null;
+    try {
+        const res = await fetch('/data/toernooi_data.json', { cache: 'no-store' });
+        if(res && res.ok) data = await res.json();
+    } catch (e) {
+        // ignore, fallback to localStorage
+    }
+    if(!data) {
+        try { data = JSON.parse(localStorage.getItem('toernooi_data') || 'null'); } catch(e) { data = null; }
+    }
+
+    if(!data) return;
+    try {
+        if(Array.isArray(data.players) && data.players.length) {
+            const tbody = document.getElementById('player-rows');
+            tbody.innerHTML = '';
+            data.players.forEach(p => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td><input type="text" class="p-name" value="${(p.name||'').replace(/"/g,'&quot;')}"></td>` +
+                                `<td><input type="number" class="p-m1" value="${Number(p.m1||0)}"></td>` +
+                                `<td><input type="number" class="p-m2" value="${Number(p.m2||0)}"></td>`;
+                tbody.appendChild(row);
+            });
+            attachInputListeners();
+            populatePlayerScoreboard(getPlayersFromInputs());
+        }
+
+        if(Array.isArray(data.teams) && data.teams.length) {
+            window.currentPlayers = data.players || [];
+            renderBracketFromTeams(data.teams, data.semiResults || {});
+            window.semiResults = data.semiResults || {};
+            if(data.finalWinner) {
+                window.finalWinner = data.finalWinner;
+                try { declareFinalWinner(data.finalWinner.code); } catch(e) {}
+            }
+        }
+    } catch(e) { console.error('loadSavedData parse error', e); }
+}
+
+function bindUIActions() {
+    // delegated click handler for score buttons
+    document.addEventListener('click', (ev) => {
+        const btn = ev.target.closest ? ev.target.closest('.score-btn') : null;
+        if(!btn) return;
+        const action = btn.dataset.action;
+        const code = btn.dataset.code;
+        const other = btn.dataset.other;
+        const delta = parseInt(btn.dataset.delta || '0', 10) || 0;
+        const semi = btn.dataset.semi ? parseInt(btn.dataset.semi, 10) : null;
+        if(action === 'semi-change') { changeSemiScore(code, other, delta, semi); }
+        else if(action === 'final-change') { changeFinalScore(code, other, delta); }
+    });
+
+    const addBtn = document.getElementById('add-player-btn'); if(addBtn) addBtn.addEventListener('click', addRow);
+    const dummyBtn = document.getElementById('fill-dummy-btn'); if(dummyBtn) dummyBtn.addEventListener('click', fillDummyData);
+    const startBtn = document.getElementById('start-knockout-btn'); if(startBtn) startBtn.addEventListener('click', startKnockout);
+    const resetBtn = document.getElementById('reset-btn'); if(resetBtn) resetBtn.addEventListener('click', resetTournament);
+}
+
+function resetTournament() {
+    if(!confirm('Weet je zeker dat je het toernooi wilt resetten?')) return;
+    // clear runtime state
+    window.currentTeams = [];
+    window.currentPlayers = [];
+    window.semiResults = {};
+    window.finalWinner = null;
+    // clear saved local storage
+    try { localStorage.removeItem('toernooi_data'); } catch(e) {}
+    // clear bracket UI
+    const m1 = document.getElementById('m1-content'); if(m1) m1.innerHTML = '<strong>Winnaar HF1 vs Winnaar HF2</strong>';
+    const m2 = document.getElementById('m2-content'); if(m2) m2.innerHTML = '';
+    const final = document.getElementById('final-winners'); if(final) final.innerHTML = '<strong>Winnaar HF1 vs Winnaar HF2</strong>';
+    // reset player rows
+    const tbody = document.getElementById('player-rows'); if(tbody) { tbody.innerHTML = ''; for(let i=0;i<10;i++) addRow(); }
+    // reset scoreboard
+    populatePlayerScoreboard([]);
+    // show setup, hide bracket
+    const setup = document.getElementById('setup'); if(setup) setup.classList.remove('hidden');
+    const bracket = document.getElementById('bracket-view'); if(bracket) bracket.classList.add('hidden');
+    // stop confetti if running
+    try { window.finalWinner = null; } catch(e) {}
+    autoSave();
+}
+
+// Initialize on DOM ready
+try {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => { attachInputListeners(); bindUIActions(); loadSavedData(); });
+    } else {
+        attachInputListeners(); bindUIActions(); loadSavedData();
+    }
+} catch(e) {}

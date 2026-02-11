@@ -162,40 +162,40 @@
       "code": "C4"
     },
     "2": {
-      "id": "Team 3",
+      "id": "Team 2",
       "p1": {
-        "name": "Charlie",
-        "m1": 9,
-        "m2": 8,
-        "total": 17
+        "name": "Bravo",
+        "m1": 11,
+        "m2": 10,
+        "total": 21
       },
       "p2": {
-        "name": "Foxtrot",
-        "m1": 6,
-        "m2": 5,
-        "total": 11
+        "name": "Golf",
+        "m1": 5,
+        "m2": 4,
+        "total": 9
       },
-      "rank": "3 & 6",
-      "code": "C3"
+      "rank": "2 & 7",
+      "code": "C2"
     }
   },
   "finalWinner": {
-    "id": "Team 3",
+    "id": "Team 4",
     "p1": {
-      "name": "Charlie",
-      "m1": 9,
-      "m2": 8,
-      "total": 17
+      "name": "Delta",
+      "m1": 8,
+      "m2": 7,
+      "total": 15
     },
     "p2": {
-      "name": "Foxtrot",
-      "m1": 6,
-      "m2": 5,
-      "total": 11
+      "name": "Echo",
+      "m1": 7,
+      "m2": 6,
+      "total": 13
     },
-    "rank": "3 & 6",
-    "code": "C3"
+    "rank": "4 & 5",
+    "code": "C4"
   },
-  "timestamp": "2026-02-11T21:55:18.728Z",
-  "serverTimestamp": "2026-02-11T21:55:18.732Z"
+  "timestamp": "2026-02-11T22:04:39.958Z",
+  "serverTimestamp": "2026-02-11T22:04:39.960Z"
 }

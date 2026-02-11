@@ -12,11 +12,11 @@ const dataDir = path.join(__dirname, 'data');
 if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 const dataFile = path.join(dataDir, 'toernooi_data.json');
 
-app.post('/save', (req, res) => {
+app.post('/save', async (req, res) => {
   try {
     const payload = req.body || {};
     payload.serverTimestamp = new Date().toISOString();
-    fs.writeFileSync(dataFile, JSON.stringify(payload, null, 2), 'utf8');
+    await fs.promises.writeFile(dataFile, JSON.stringify(payload, null, 2), 'utf8');
     res.json({ ok: true, path: '/data/toernooi_data.json' });
   } catch (err) {
     console.error('Save error', err);

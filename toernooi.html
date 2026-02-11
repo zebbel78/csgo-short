@@ -19,9 +19,9 @@
             </thead>
             <tbody id="player-rows"></tbody>
         </table>
-        <button class="btn btn-add" onclick="addRow()">+ Speler Toevoegen</button>
-        <button class="btn btn-add" style="background:#2196F3; margin-left:8px;" onclick="fillDummyData()">Vul Dummy Data</button>
-        <button class="btn" onclick="startKnockout()">GENEREER KNOCKOUT BRACKET</button>
+        <button id="add-player-btn" class="btn btn-add">+ Speler Toevoegen</button>
+        <button id="fill-dummy-btn" class="btn btn-add" style="background:#2196F3; margin-left:8px;">Vul Dummy Data</button>
+        <button id="start-knockout-btn" class="btn">GENEREER KNOCKOUT BRACKET</button>
     </div>
 
     <div id="bracket-view" class="hidden">
@@ -55,7 +55,7 @@
             </table>
         </div>
 
-        <button class="btn" style="margin-top:40px; background:#444; color:white;" onclick="location.reload()">RESET TOERNOOI</button>
+        <button id="reset-btn" class="btn" style="margin-top:40px; background:#444; color:white;">RESET TOERNOOI</button>
     </div>
 </div>
 
