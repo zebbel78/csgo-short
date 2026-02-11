@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>CS:GO Poseidon Tournament - Official</title>
+    <style>
+        :root { --cs-orange: #ff9d00; --cs-blue: #0c192c; --cs-dark: #1b1e21; --text: #e0e0e0; }
+        body { font-family: 'Arial', sans-serif; background: var(--cs-blue); color: var(--text); padding: 20px; }
+        .container { max-width: 900px; margin: auto; background: var(--cs-dark); padding: 25px; border-radius: 12px; border-top: 6px solid var(--cs-orange); box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
+        h1, h2 { text-align: center; color: var(--cs-orange); letter-spacing: 2px; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th { background: #25282c; padding: 12px; border-bottom: 2px solid var(--cs-orange); }
+        td { padding: 10px; border-bottom: 1px solid #333; }
+        input { background: #2c3136; border: 1px solid #444; color: white; padding: 8px; border-radius: 4px; width: 80%; }
+        .btn { width: 100%; padding: 15px; background: var(--cs-orange); border: none; font-weight: bold; cursor: pointer; border-radius: 6px; font-size: 1.1em; }
+        .btn:hover { background: #fff; }
+        .btn-add { background: #4caf50; color: white; margin-bottom: 10px; width: auto; padding: 10px 20px; }
+        
+        .bracket-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px; }
+        .match-box { background: #25282c; padding: 15px; margin-bottom: 20px; border-left: 4px solid var(--cs-orange); position: relative; }
+        .match-label { font-size: 0.7em; color: var(--cs-orange); font-weight: bold; text-transform: uppercase; }
+        .final-box { grid-column: 1 / span 2; border: 2px solid gold; background: #2a2510; text-align: center; }
+        .rank-tag { font-size: 0.8em; opacity: 0.7; font-style: italic; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🔱 DE_POSEIDON TOERNOOI</h1>
+
+    <div id="setup">
+        <h2>Fase 1: Deathmatch Qualifiers</h2>
+        <p style="text-align:center;">Voer kills in. De top 8 gaat door naar de Wingman Knockout.</p>
+        <table>
+            <thead>
+                <tr><th>Naam Speler</th><th>Map 1 Kills</th><th>Map 2 Kills</th></tr>
+            </thead>
+            <tbody id="player-rows">
+                </tbody>
+        </table>
+        <button class="btn btn-add" onclick="addRow()">+ Speler Toevoegen</button>
+        <button class="btn" onclick="startKnockout()">GENEREER KNOCKOUT BRACKET</button>
+    </div>
+
+    <div id="bracket-view" class="hidden">
+        <h2>Fase 2: Wingman Knockout</h2>
+        <p style="text-align:center; color: #aaa;">Map: <strong>de_poseidon</strong></p>
+        
+        <div class="bracket-grid">
+            <div id="semi-1">
+                <div class="match-label">Halve Finale 1</div>
+                <div class="match-box" id="m1-content"></div>
+            </div>
+            <div id="semi-2">
+                <div class="match-label">Halve Finale 2</div>
+                <div class="match-box" id="m2-content"></div>
+            </div>
+            <div class="final-box">
+                <div class="match-label" style="color: gold;">Grote Finale</div>
+                <div class="match-box" style="border:none; background:transparent;">
+                    <strong>Winnaar HF1 vs Winnaar HF2</strong>
+                </div>
+            </div>
+        </div>
+        
+        <button class="btn" style="margin-top:40px; background:#444; color:white;" onclick="location.reload()">RESET TOERNOOI</button>
+    </div>
+</div>
+
+<script>
+    // Start met 10 velden (zodat je wat te filteren hebt)
+    for(let i=0; i<10; i++) addRow();
+
+    function addRow() {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td><input type="text" class="p-name" placeholder="Naam..."></td>
+                         <td><input type="number" class="p-m1" value="0"></td>
+                         <td><input type="number" class="p-m2" value="0"></td>`;
+        document.getElementById('player-rows').appendChild(row);
+    }
+
+    function startKnockout() {
+        let players = [];
+        const names = document.querySelectorAll('.p-name');
+        const m1 = document.querySelectorAll('.p-m1');
+        const m2 = document.querySelectorAll('.p-m2');
+
+        names.forEach((n, i) => {
+            if(n.value.trim() !== "") {
+                players.push({
+                    name: n.value,
+                    total: parseInt(m1[i].value) + parseInt(m2[i].value)
+                });
+            }
+        });
+
+        if(players.length < 8) return alert("Je hebt minimaal 8 spelers nodig voor de top 8!");
+
+        // 1. Sorteer op kills
+        players.sort((a, b) => b.total - a.total);
+
+        // 2. Pak de top 8
+        const top8 = players.slice(0, 8);
+
+        // 3. Maak teams volgens #1+#8, #2+#7, #3+#6, #4+#5
+        const teams = [
+            { id: "Team 1", p1: top8[0], p2: top8[7], rank: "1 & 8" },
+            { id: "Team 2", p1: top8[1], p2: top8[6], rank: "2 & 7" },
+            { id: "Team 3", p1: top8[2], p2: top8[5], rank: "3 & 6" },
+            { id: "Team 4", p1: top8[3], p2: top8[4], rank: "4 & 5" }
+        ];
+
+        // 4. Vul de bracket (Semi 1: T1 vs T4 | Semi 2: T2 vs T3)
+        // Dit zorgt dat de sterkste teams (1 en 2) elkaar pas in de finale zien.
+        document.getElementById('m1-content').innerHTML = `
+            <strong>${teams[0].p1.name} & ${teams[0].p2.name}</strong> <span class="rank-tag">(#${teams[0].rank})</span><br>
+            <div style="margin:5px 0; color:orange; font-weight:bold;">VS</div>
+            <strong>${teams[3].p1.name} & ${teams[3].p2.name}</strong> <span class="rank-tag">(#${teams[3].rank})</span>
+        `;
+
+        document.getElementById('m2-content').innerHTML = `
+            <strong>${teams[1].p1.name} & ${teams[1].p2.name}</strong> <span class="rank-tag">(#${teams[1].rank})</span><br>
+            <div style="margin:5px 0; color:orange; font-weight:bold;">VS</div>
+            <strong>${teams[2].p1.name} & ${teams[2].p2.name}</strong> <span class="rank-tag">(#${teams[2].rank})</span>
+        `;
+
+        document.getElementById('setup').classList.add('hidden');
+        document.getElementById('bracket-view').classList.remove('hidden');
+    }
+</script>
+
+</body>
+</html>
