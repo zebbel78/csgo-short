@@ -1,0 +1,201 @@
+{
+  "players": [
+    {
+      "name": "Alpha",
+      "m1": 12,
+      "m2": 9,
+      "total": 21
+    },
+    {
+      "name": "Bravo",
+      "m1": 11,
+      "m2": 10,
+      "total": 21
+    },
+    {
+      "name": "Charlie",
+      "m1": 9,
+      "m2": 8,
+      "total": 17
+    },
+    {
+      "name": "Delta",
+      "m1": 8,
+      "m2": 7,
+      "total": 15
+    },
+    {
+      "name": "Echo",
+      "m1": 7,
+      "m2": 6,
+      "total": 13
+    },
+    {
+      "name": "Foxtrot",
+      "m1": 6,
+      "m2": 5,
+      "total": 11
+    },
+    {
+      "name": "Golf",
+      "m1": 5,
+      "m2": 4,
+      "total": 9
+    },
+    {
+      "name": "Hotel",
+      "m1": 4,
+      "m2": 3,
+      "total": 7
+    },
+    {
+      "name": "India",
+      "m1": 3,
+      "m2": 2,
+      "total": 5
+    },
+    {
+      "name": "Juliet",
+      "m1": 2,
+      "m2": 1,
+      "total": 3
+    },
+    {
+      "name": "Kilo",
+      "m1": 1,
+      "m2": 0,
+      "total": 1
+    },
+    {
+      "name": "Lima",
+      "m1": 0,
+      "m2": 0,
+      "total": 0
+    }
+  ],
+  "teams": [
+    {
+      "id": "Team 1",
+      "p1": {
+        "name": "Alpha",
+        "m1": 12,
+        "m2": 9,
+        "total": 21
+      },
+      "p2": {
+        "name": "Hotel",
+        "m1": 4,
+        "m2": 3,
+        "total": 7
+      },
+      "rank": "1 & 8",
+      "code": "C1"
+    },
+    {
+      "id": "Team 2",
+      "p1": {
+        "name": "Bravo",
+        "m1": 11,
+        "m2": 10,
+        "total": 21
+      },
+      "p2": {
+        "name": "Golf",
+        "m1": 5,
+        "m2": 4,
+        "total": 9
+      },
+      "rank": "2 & 7",
+      "code": "C2"
+    },
+    {
+      "id": "Team 3",
+      "p1": {
+        "name": "Charlie",
+        "m1": 9,
+        "m2": 8,
+        "total": 17
+      },
+      "p2": {
+        "name": "Foxtrot",
+        "m1": 6,
+        "m2": 5,
+        "total": 11
+      },
+      "rank": "3 & 6",
+      "code": "C3"
+    },
+    {
+      "id": "Team 4",
+      "p1": {
+        "name": "Delta",
+        "m1": 8,
+        "m2": 7,
+        "total": 15
+      },
+      "p2": {
+        "name": "Echo",
+        "m1": 7,
+        "m2": 6,
+        "total": 13
+      },
+      "rank": "4 & 5",
+      "code": "C4"
+    }
+  ],
+  "semiResults": {
+    "1": {
+      "id": "Team 4",
+      "p1": {
+        "name": "Delta",
+        "m1": 8,
+        "m2": 7,
+        "total": 15
+      },
+      "p2": {
+        "name": "Echo",
+        "m1": 7,
+        "m2": 6,
+        "total": 13
+      },
+      "rank": "4 & 5",
+      "code": "C4"
+    },
+    "2": {
+      "id": "Team 3",
+      "p1": {
+        "name": "Charlie",
+        "m1": 9,
+        "m2": 8,
+        "total": 17
+      },
+      "p2": {
+        "name": "Foxtrot",
+        "m1": 6,
+        "m2": 5,
+        "total": 11
+      },
+      "rank": "3 & 6",
+      "code": "C3"
+    }
+  },
+  "finalWinner": {
+    "id": "Team 3",
+    "p1": {
+      "name": "Charlie",
+      "m1": 9,
+      "m2": 8,
+      "total": 17
+    },
+    "p2": {
+      "name": "Foxtrot",
+      "m1": 6,
+      "m2": 5,
+      "total": 11
+    },
+    "rank": "3 & 6",
+    "code": "C3"
+  },
+  "timestamp": "2026-02-11T21:18:41.185Z",
+  "serverTimestamp": "2026-02-11T21:18:41.188Z"
+}
